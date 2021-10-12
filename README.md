@@ -2,6 +2,7 @@
 * One implementation of the paper "DMRST: A Joint Framework for Document-Level Multilingual RST Discourse Segmentation and Parsing". <br>
 * Users can apply it to parse the input text from scratch, and get the EDU segmentations and the parsed tree structure. <br>
 * The model supports both sentence-level and document-level RST discourse parsing. <br>
+* This repo and the pre-trained model is only for research use. <br>
 
 ## Package Requirements
 1. pytorch==1.7.1
