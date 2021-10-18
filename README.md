@@ -29,12 +29,10 @@ We trained and evaluated the model with the multilingual collection of RST disco
 ## Citation
 ```
 @article{liu2021dmrst,
-      title={DMRST: A Joint Framework for Document-Level Multilingual RST Discourse Segmentation and Parsing}, 
-      author={Zhengyuan Liu and Ke Shi and Nancy F. Chen},
-      year={2021},
-      eprint={2110.04518},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+  title={DMRST: A Joint Framework for Document-Level Multilingual RST Discourse Segmentation and Parsing},
+  author={Liu, Zhengyuan and Shi, Ke and Chen, Nancy F},
+  journal={arXiv preprint arXiv:2110.04518},
+  year={2021}
 }
 ```
 ```
