@@ -12,13 +12,16 @@
 We trained and evaluated the model with the multilingual collection of RST discourse treebanks, and it natively supports 6 languages: English, Portuguese, Spanish, German, Dutch, Basque. Interested users can also try other languages.
 
 ## Data Format
-* [Input] `InputSentence`: The input document/sentence, and the raw text will be tokenizaed and encoded by the `xlm-roberta-base` language backbone. '|| ' denotes the EDU boundary positions. <br>
-    * Although the report, || which has released || before the stock market opened, || didn't trigger the 190.58 point drop in the Dow Jones Industrial Average, || analysts said || it did play a role in the market's decline. || <br>
+* [Input] `InputSentence`: The input document/sentence, and the raw text will be tokenizaed and encoded by the `xlm-roberta-base` language backbone. <br>
+    * Raw Sequence Example: <br>
+    *Although the report, which has released before the stock market opened, didn't trigger the 190.58 point drop in the Dow Jones Industrial Average, analysts said it did play a role in the market's decline.* <br>
 
 * [Output] `EDU_Breaks`: The indices of the EDU boundary tokens, including the last word of the sentence. <br>
-    * [2, 5, 10, 22, 24, 33] <br>
+    * Output Example: [5, 10, 17, 33, 37, 49] <br>
+    * Segmented Sequence Example ('||' denotes the EDU boundary positions for better readability):  <br>
+    *Although the report, || which has released || before the stock market opened, || didn't trigger the 190.58 point drop in the Dow Jones Industrial Average, || analysts said || it did play a role in the market's decline. ||* <br>
 
-* [Output] `tree_parsing_output`: The model outputs of the discourse parsing tree follow this format. <br>
+* [Output] `tree_parsing_output`: The model outputs of the discourse parsing tree follow this top-down constituency parsing format. <br>
    * (1:Satellite=Contrast:4,5:Nucleus=span:6) (1:Nucleus=Same-Unit:3,4:Nucleus=Same-Unite:4) (5:Satellite=Attribution:5,6:Nucleus=span:6) (1:Satellite=span:1,2:Nucleus=Elaboration:3) (2:Nucleus=span:2,3:Satellite=Temporal:3) <br>
 
 ## How to use it for parsing
