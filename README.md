@@ -2,7 +2,7 @@
 * One implementation of the paper "DMRST: A Joint Framework for Document-Level Multilingual RST Discourse Segmentation and Parsing". <br>
 * Users can apply it to parse the input text from scratch, and get the EDU segmentations and the parsed tree structure. <br>
 * The model supports both sentence-level and document-level RST discourse parsing. <br>
-* This repo and the pre-trained model is only for research use. <br>
+* This repo and the pre-trained model are only for research use. <br>
 
 ## Package Requirements
 1. pytorch==1.7.1
@@ -31,11 +31,16 @@ We trained and evaluated the model with the multilingual collection of RST disco
 
 ## Citation
 ```
-@article{liu2021dmrst,
-  title={DMRST: A Joint Framework for Document-Level Multilingual RST Discourse Segmentation and Parsing},
-  author={Liu, Zhengyuan and Shi, Ke and Chen, Nancy F},
-  journal={arXiv preprint arXiv:2110.04518},
-  year={2021}
+@inproceedings{liu-etal-2021-dmrst,
+    title = "{DMRST}: A Joint Framework for Document-Level Multilingual {RST} Discourse Segmentation and Parsing",
+    author = "Liu, Zhengyuan and Shi, Ke and Chen, Nancy",
+    booktitle = "Proceedings of the 2nd Workshop on Computational Approaches to Discourse",
+    month = nov,
+    year = "2021",
+    address = "Punta Cana, Dominican Republic and Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.codi-main.15",
+    pages = "154--164",
 }
 ```
 ```
