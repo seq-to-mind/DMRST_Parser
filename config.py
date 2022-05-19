@@ -11,6 +11,7 @@ enc_rnn_layer_num = 1
 tree_infer_mode = "depth"
 different_learning_rate = True
 use_dev_set = True
+""" adjust according to the training sample size """
 dev_set_size = 15
 
 hidden_size = 768
@@ -20,5 +21,5 @@ use_org_Parseval = False
 
 save_model = False
 
-use_dwa_loss = False
+use_dwa_loss = True
 if_edu_start_loss = True
