@@ -45,7 +45,129 @@ class ParsingNet(nn.Module):
 
     def forward(self):
         raise RuntimeError('Parsing Network does not have forward process.')
-        
+
+    def TrainingLoss(self, input_sentence, EDU_breaks, LabelIndex, ParsingIndex, DecoderInputIndex, ParentsIndex, SiblingIndex):
+
+        # Obtain encoder outputs and last hidden states
+        EncoderOutputs, Last_Hiddenstates, total_edu_loss, _ = self.encoder(input_sentence, EDU_breaks)
+
+        Label_LossFunction = nn.NLLLoss()
+        Span_LossFunction = nn.NLLLoss()
+
+        Loss_label_batch = 0
+        Loss_tree_batch = torch.FloatTensor([0.0]).cuda()
+        Loop_label_batch = 0
+        Loop_tree_batch = 0
+
+        batch_size = len(LabelIndex)
+        for i in range(batch_size):
+
+            cur_LabelIndex = LabelIndex[i]
+            cur_LabelIndex = torch.tensor(cur_LabelIndex)
+            cur_LabelIndex = cur_LabelIndex.cuda()
+            cur_ParsingIndex = ParsingIndex[i]
+            cur_DecoderInputIndex = DecoderInputIndex[i]
+            cur_ParentsIndex = ParentsIndex[i]
+            cur_SiblingIndex = SiblingIndex[i]
+
+            if len(EDU_breaks[i]) == 1:
+
+                continue
+
+            elif len(EDU_breaks[i]) == 2:
+
+                # Obtain the encoded representations. The dimension: [2,hidden_size]
+                cur_EncoderOutputs = EncoderOutputs[i][:len(EDU_breaks[i])]
+
+                # Use the last hidden state of a span to predict the relation between these two span.
+                input_left = cur_EncoderOutputs[0].unsqueeze(0)
+                input_right = cur_EncoderOutputs[1].unsqueeze(0)
+
+                _, log_relation_weights = self.getlabel(input_left, input_right)
+
+                Loss_label_batch = Loss_label_batch + Label_LossFunction(log_relation_weights, cur_LabelIndex)
+                Loop_label_batch = Loop_label_batch + 1
+
+            else:
+                cur_EncoderOutputs = EncoderOutputs[i][:len(EDU_breaks[i])]
+                cur_Last_Hiddenstates = Last_Hiddenstates[:, i, :].unsqueeze(1)
+                cur_decoder_hidden = cur_Last_Hiddenstates.contiguous()
+
+                EDU_index = [x for x in range(len(cur_EncoderOutputs))]
+                stacks = ['__StackRoot__', EDU_index]
+
+                for j in range(len(cur_DecoderInputIndex)):
+
+                    if stacks[-1] != '__StackRoot__':
+                        stack_head = stacks[-1]
+
+                        if len(stack_head) < 3:
+
+                            # Will remove this from stacks after compute the relation between these two EDUS
+                            input_left = cur_EncoderOutputs[cur_ParsingIndex[j]].unsqueeze(0)
+                            input_right = cur_EncoderOutputs[stack_head[-1]].unsqueeze(0)
+
+                            assert cur_ParsingIndex[j] < stack_head[-1]
+
+                            # keep the last hidden state consistent.
+                            cur_decoder_input = torch.mean(cur_EncoderOutputs[stack_head], keepdim=True, dim=0).unsqueeze(0)
+                            cur_decoder_output, cur_decoder_hidden = self.decoder(cur_decoder_input, last_hidden=cur_decoder_hidden)
+
+                            _, log_relation_weights = self.getlabel(input_left, input_right)
+                            Loss_label_batch = Loss_label_batch + Label_LossFunction(log_relation_weights, cur_LabelIndex[j].unsqueeze(0))
+
+                            del stacks[-1]
+                            Loop_label_batch = Loop_label_batch + 1
+
+                        else:  # Length of stack_head >= 3
+
+                            # Compute Tree Loss
+                            # We don't attend to the last EDU of a span to be parsed
+                            cur_decoder_input = torch.mean(cur_EncoderOutputs[stack_head], keepdim=True, dim=0).unsqueeze(0)
+
+                            # Predict the parsing tree break
+                            cur_decoder_output, cur_decoder_hidden = self.decoder(cur_decoder_input, last_hidden=cur_decoder_hidden)
+
+                            _, log_atten_weights = self.pointer(cur_EncoderOutputs[stack_head[:-1]], cur_decoder_output.squeeze(0).squeeze(0))
+                            cur_ground_index = torch.tensor([int(cur_ParsingIndex[j]) - int(stack_head[0])])
+                            cur_ground_index = cur_ground_index.cuda()
+                            Loss_tree_batch = Loss_tree_batch + Span_LossFunction(log_atten_weights, cur_ground_index)
+
+                            # Compute Classifier Loss
+                            """ merge edu level representation for left and right siblings START """
+                            if config.average_edu_level is True:
+                                input_left = torch.mean(cur_EncoderOutputs[stack_head[0]:cur_ParsingIndex[j] + 1, :], keepdim=True, dim=0)
+                                input_right = torch.mean(cur_EncoderOutputs[cur_ParsingIndex[j] + 1: stack_head[-1] + 1, :], keepdim=True, dim=0)
+                            else:
+                                input_left = cur_EncoderOutputs[cur_ParsingIndex[j]].unsqueeze(0)
+                                input_right = cur_EncoderOutputs[stack_head[-1]].unsqueeze(0)
+                            """ merge edu level representation for left and right siblings END """
+
+                            _, log_relation_weights = self.getlabel(input_left, input_right)
+                            Loss_label_batch = Loss_label_batch + Label_LossFunction(log_relation_weights, cur_LabelIndex[j].unsqueeze(0))
+
+                            # Stacks stuff
+                            stack_left = stack_head[:(cur_ParsingIndex[j] - stack_head[0] + 1)]
+                            stack_right = stack_head[(cur_ParsingIndex[j] - stack_head[0] + 1):]
+                            del stacks[-1]
+                            Loop_label_batch = Loop_label_batch + 1
+                            Loop_tree_batch = Loop_tree_batch + 1
+
+                            # Remove ONE-EDU part, TWO-EDU span will be removed after classifier in next step
+                            if len(stack_right) > 1:
+                                stacks.append(stack_right)
+                            if len(stack_left) > 1:
+                                stacks.append(stack_left)
+
+        Loss_label_batch = Loss_label_batch / Loop_label_batch
+
+        if Loop_tree_batch == 0:
+            Loop_tree_batch = 1
+
+        Loss_tree_batch = Loss_tree_batch / Loop_tree_batch
+
+        return Loss_tree_batch, Loss_label_batch, total_edu_loss
+
 
     def TestingLoss(self, input_sentence, input_EDU_breaks, LabelIndex, ParsingIndex, GenerateTree, use_pred_segmentation):
         '''

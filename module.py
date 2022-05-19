@@ -85,6 +85,8 @@ class EncoderRNN(nn.Module):
             else:
                 cur_edu_break = EDU_breaks[i]
                 seg_loss = self.segmenter.train_segment_loss(embeddings.squeeze(), cur_edu_break)
+                """ Use this to pass the segmenation loss part: only for debug """
+                # seg_loss = 0.0
                 total_edu_loss += seg_loss
 
             # apply dropout
