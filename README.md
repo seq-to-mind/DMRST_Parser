@@ -8,10 +8,21 @@
 1. pytorch==1.7.1
 2. transformers==4.8.2
 
-## Supported Languages
+## Training: How to convert treebanks to our format for this framework
+* Following steps in the two sub-folders under `Preprocess_RST_Data`.
+* After all treebank pre-processing steps, all samples will be stored in pickle files (the output path is set by user).
+* As some treebanks needs LDC license, here we only provide one public treebank as example.
+* Tne example pre-processed treebank GUM is located at the folder `./depth_mode/pkl_data_for_train/en-gum/`.
+
+## Training: How to train a model with pre-processed treebank
+* Run the script `MUL_main_Train.py` to train a model.
+* Before you start to train, we recommend that you read the parameter settings. 
+* The pre-processed data in folder `./depth_mode/pkl_data_for_train/en-gum/` will be used for training by default.
+
+## Inference: Supported Languages
 We trained and evaluated the model with the multilingual collection of RST discourse treebanks, and it natively supports 6 languages: English, Portuguese, Spanish, German, Dutch, Basque. Interested users can also try other languages.
 
-## Data Format
+## Inference: Data Format
 * [Input] `InputSentence`: The input document/sentence, and the raw text will be tokenizaed and encoded by the `xlm-roberta-base` language backbone. <br>
     * Raw Sequence Example: <br>
     *Although the report, which has released before the stock market opened, didn't trigger the 190.58 point drop in the Dow Jones Industrial Average, analysts said it did play a role in the market's decline.* <br>
@@ -24,7 +35,7 @@ We trained and evaluated the model with the multilingual collection of RST disco
 * [Output] `tree_parsing_output`: The model outputs of the discourse parsing tree follow this top-down constituency parsing format. <br>
    * (1:Satellite=Contrast:4,5:Nucleus=span:6) (1:Nucleus=Same-Unit:3,4:Nucleus=Same-Unite:4) (5:Satellite=Attribution:5,6:Nucleus=span:6) (1:Satellite=span:1,2:Nucleus=Elaboration:3) (2:Nucleus=span:2,3:Satellite=Temporal:3) <br>
 
-## How to use it for parsing
+## Inference: How to use it for parsing
 * Put the text paragraph to the file `./data/text_for_inference.txt`. <br>
 * Run the script `MUL_main_Infer.py` to obtain the RST parsing result. See the script for detailed model output. <br>
 * We recommend users to run the parser on a GPU-equipped environment. <br>
