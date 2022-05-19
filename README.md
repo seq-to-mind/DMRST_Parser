@@ -11,7 +11,7 @@
 ## Training: How to convert treebanks to our format for this framework
 * Following steps in the two sub-folders under `Preprocess_RST_Data`.
 * After all treebank pre-processing steps, all samples will be stored in pickle files (the output path is set by user).
-* As some treebanks needs LDC license, here we only provide one public treebank as example.
+* Since some treebanks need LDC license, here we only provide one public dataset as example.
 * Tne example pre-processed treebank GUM is located at the folder `./depth_mode/pkl_data_for_train/en-gum/`.
 
 ## Training: How to train a model with pre-processed treebank
