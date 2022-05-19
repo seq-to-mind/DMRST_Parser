@@ -1,8 +1,8 @@
 ## Introduction
-* One implementation of the paper "DMRST: A Joint Framework for Document-Level Multilingual RST Discourse Segmentation and Parsing". <br>
+* One implementation of the paper "DMRST: A Joint Framework for Document-Level Multilingual RST Discourse Segmentation and Parsing" and "Multilingual Neural RST Discourse Parsing". <br>
 * Users can apply it to parse the input text from scratch, and get the EDU segmentations and the parsed tree structure. <br>
 * The model supports both sentence-level and document-level RST discourse parsing. <br>
-* This repo and the pre-trained model are only for research use. <br>
+* This repo and the pre-trained model are only for research use. Please cite the papers if they are helpful. <br>
 
 ## Package Requirements
 1. pytorch==1.7.1
@@ -12,12 +12,12 @@
 * Following steps in the two sub-folders under `Preprocess_RST_Data`.
 * After all treebank pre-processing steps, all samples will be stored in pickle files (the output path is set by user).
 * Since some treebanks need LDC license, here we only provide one public dataset as example.
-* Tne example pre-processed treebank GUM is located at the folder `./depth_mode/pkl_data_for_train/en-gum/`.
+* Tne example pre-processed treebank GUM (English-only) is located at the folder `./depth_mode/pkl_data_for_train/en-gum/`.
 
-## Training: How to train a model with pre-processed treebank
-* Run the script `MUL_main_Train.py` to train a model.
+## Training: How to train a model with a pre-processed treebank
+* Run the script `MUL_main_Train.py` to train a model.  
 * Before you start to train, we recommend that you read the parameter settings. 
-* The pre-processed data in folder `./depth_mode/pkl_data_for_train/en-gum/` will be used for training by default.
+* The pre-processed data in folder `./depth_mode/pkl_data_for_train/en-gum/` (English-only) will be used for training by default.
 
 ## Inference: Supported Languages
 We trained and evaluated the model with the multilingual collection of RST discourse treebanks, and it natively supports 6 languages: English, Portuguese, Spanish, German, Dutch, Basque. Interested users can also try other languages.
