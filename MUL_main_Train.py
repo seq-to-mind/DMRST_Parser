@@ -39,7 +39,7 @@ def parse_args():
     parser.add_argument('--weight_decay', type=float, default=0.01, help='Weight decay rate')
 
     base_path = config.tree_infer_mode + "_mode/"
-    parser.add_argument('--datapath', type=str, default=base_path + './pkl_data_for_train/en-dt/', help='Data path')
+    parser.add_argument('--datapath', type=str, default=base_path + './pkl_data_for_train/en-gum/', help='Data path')
     parser.add_argument('--savepath', type=str, default=base_path + './Savings', help='Model save path')
     args = parser.parse_args()
 
