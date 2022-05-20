@@ -23,6 +23,7 @@ The model training and inference scripts were tested on following libraries and 
 * Note that the `XLM-Roberta-base tokenizer` is used in both treebank pre-processing and model training scripts. For other tokenizers, you should change them accordingly.
 
 ## Inference: Supported Languages
+Instead of re-training the model, you can use the well-trained parser for inference (model checkpoint is located at `./depth_mode/Savings/`). <br>
 We trained and evaluated the model with the multilingual collection of RST discourse treebanks, and it natively supports 6 languages: English, Portuguese, Spanish, German, Dutch, Basque. Interested users can also try other languages.
 
 ## Inference: Data Format
@@ -40,6 +41,7 @@ We trained and evaluated the model with the multilingual collection of RST disco
 
 ## Inference: How to use it for parsing
 * Put the text paragraph to the file `./data/text_for_inference.txt`. <br>
+* Pre-trained model checkpoint is located at `./depth_mode/Savings/`. <br>
 * Run the script `MUL_main_Infer.py` to obtain the RST parsing result. See the script for detailed model output. <br>
 * We recommend users to run the parser on a GPU-equipped environment. <br>
 
