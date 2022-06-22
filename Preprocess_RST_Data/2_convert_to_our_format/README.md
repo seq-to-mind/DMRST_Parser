@@ -1,8 +1,12 @@
+0. [Optional] If you want to conduct the EDU-level cross-translation augmentation, you can use machine translation engines to process the *.edu files (from a source language to a target language).  
+As each row in *.edu files is one EDU segment, please keep the same row number/row order before and after translation.
+
+
 1. MUL_generate_input_pkl_XLMR.py  
 
     To generate all pickle files for discourse parsing Framework.
 
-* input_base_path: the data path of each translated language (the folder includes .edus file and .dmrg file).  
+* input_base_path: the data path of each translated language (the folder includes *.edus file and *.dmrg file).  
 * output_base_path: the data path of generated pickle files.
 
 2. split_train_test_pickle.py  
