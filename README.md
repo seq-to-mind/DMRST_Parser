@@ -15,7 +15,7 @@ The model training and inference scripts were tested on following libraries and 
 * Note that the `XLM-Roberta-base tokenizer` is used in both treebank pre-processing and model training scripts. If you want to use other tokenizers, you should change them accordingly.
 * After all treebank pre-processing steps, samples will be stored in pickle files (the output path is set by user).
 * Since some treebanks need LDC license, for model re-training, in this repo we only provide one public dataset GUM (Zeldes, A., 2017) as an example.
-* Tne exampled pre-processed treebank GUM (Zeldes, A., 2017) (English-only) is located at the folder `./depth_mode/pkl_data_for_train/en-gum/`.
+* The exampled pre-processed treebank GUM (Zeldes, A., 2017) (English-only) is located at the folder `./depth_mode/pkl_data_for_train/en-gum/`.
 
 ## Training: How to train a model with a pre-processed treebank
 * Run the script `MUL_main_Train.py` to train a model.  
